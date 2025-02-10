@@ -1,0 +1,6 @@
+framework module Pods_GoogleMapGeofence {
+  umbrella header "Pods-GoogleMapGeofence-umbrella.h"
+
+  export *
+  module * { export * }
+}
