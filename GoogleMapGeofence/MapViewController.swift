@@ -7,6 +7,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     var locationManager: LocationManager
     var geofenceManager: GeofenceManager
     var isDrawingEnabled: Bool
+    private var userLocationMarker: GMSMarker?
 
     private var liveDrawingPath: GMSMutablePath?
     private var liveDrawingPolyline: GMSPolyline?
@@ -46,17 +47,25 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         mapView.settings.tiltGestures = !isDrawingEnabled
     }
 
-    //Function to update user location marker
+    ///Mark:- Update user location marker instead of creating new ones
     private func updateUserLocationMarker() {
-        if let userLocation = locationManager.userLocation {
-            let userMarker = GMSMarker(position: userLocation)
-            userMarker.title = "You are here"
-            userMarker.icon = GMSMarker.markerImage(with: .red)
-            userMarker.map = mapView
+        guard let userLocation = locationManager.userLocation else { return }
+
+        if let marker = userLocationMarker {
+            CATransaction.begin()
+            CATransaction.setAnimationDuration(1.0)
+            marker.position = userLocation
+            CATransaction.commit()
+        } else {
+            // Create the marker only once
+            userLocationMarker = GMSMarker(position: userLocation)
+            userLocationMarker?.title = "You are here"
+            userLocationMarker?.icon = GMSMarker.markerImage(with: .red)
+            userLocationMarker?.map = mapView
         }
     }
 
-    //Function to allow drawing gestures for geofences
+    ///Mark:-  Function to allow drawing gestures for geofences
     private func addDrawingGesture() {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         panGesture.maximumNumberOfTouches = 1
@@ -94,7 +103,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
             liveDrawingPath = nil
 
             geofenceManager.finishDrawing(on: mapView)
-            updateUserLocationMarker() // Keep user's location marker visible
+            updateUserLocationMarker() // ✅ Keep user's location marker visible
 
             print("[MapViewController] Finished drawing geofence at \(coordinate)")
 
@@ -103,11 +112,21 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         }
     }
 
-    //Detect when a user taps on a geofence to select it
+    // Detect when a user taps on a geofence to select it
     func mapView(_ mapView: GMSMapView, didTap overlay: GMSOverlay) {
         if let polygon = overlay as? GMSPolygon {
             geofenceManager.selectedGeofence = polygon
             print("[MapViewController] Selected Geofence \(geofenceManager.getSelectedGeofenceNumber() ?? 0)")
+        }
+    }
+
+    // Ensure user location marker updates when location changes
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }
+
+        DispatchQueue.main.async {
+            self.locationManager.userLocation = location.coordinate
+            self.updateUserLocationMarker()
         }
     }
 }
