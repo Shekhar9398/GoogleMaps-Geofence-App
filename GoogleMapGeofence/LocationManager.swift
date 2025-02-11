@@ -1,24 +1,24 @@
-import Foundation
+import SwiftUI
+import GoogleMaps
 import CoreLocation
 
-///Mark: Location Manager Helps to keep track on the users current location(GPS)
+// MARK: - LocationManager.swift - Tracks user location
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var locationManager = CLLocationManager()
     @Published var userLocation: CLLocationCoordinate2D?
-
+    
     override init() {
         super.init()
         locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization() // Request permission
-        locationManager.startUpdatingLocation() // Start tracking location
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
     }
     
-    ///Mark:- Sends Last Location of the user
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             DispatchQueue.main.async {
-                print("[LocationManager]:- Users Last Location is - \(location.coordinate)")
                 self.userLocation = location.coordinate
+                print("[LocationManager.swift] MARK: User's Last Location is \(location.coordinate)")
             }
         }
     }

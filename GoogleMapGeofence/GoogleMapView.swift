@@ -1,24 +1,19 @@
 import SwiftUI
 import GoogleMaps
 
-///Mark:- SwiftUI doesnt support GMSMapView :. we are using UIViewRepresentable
-struct GoogleMapView: UIViewRepresentable {
+struct GoogleMapView: UIViewControllerRepresentable {
     @ObservedObject var locationManager: LocationManager
-
-    let mapView = GMSMapView() // displaying map
-    let marker = GMSMarker() // pinning the location(mark)
-
-
-    ///Mark:- Create a View for SwiftUI
-    func makeUIView(context: Context) -> GMSMapView {
-        return mapView
+    @ObservedObject var geofenceManager: GeofenceManager
+    @Binding var isDrawingEnabled: Bool
+    
+    func makeUIViewController(context: Context) -> MapViewController {
+        return MapViewController(locationManager: locationManager,
+                                 geofenceManager: geofenceManager,
+                                 isDrawingEnabled: isDrawingEnabled)
     }
-
-    ///Mark:- Update the SwiftUI View as get the UserLocation
-    func updateUIView(_ uiView: GMSMapView, context: Context) {
-        if let location = locationManager.userLocation {
-            marker.position = location
-            marker.map = uiView
-        }
+    
+    func updateUIViewController(_ uiViewController: MapViewController, context: Context) {
+        uiViewController.isDrawingEnabled = isDrawingEnabled
+        uiViewController.updateMapGestures()
     }
 }

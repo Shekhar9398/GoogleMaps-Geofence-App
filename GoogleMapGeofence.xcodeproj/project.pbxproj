@@ -14,6 +14,8 @@
 		F44248942D5A012200A5034E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F44248932D5A012200A5034E /* Preview Assets.xcassets */; };
 		F442489C2D5A0B4700A5034E /* GoogleMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F442489B2D5A0B4700A5034E /* GoogleMapView.swift */; };
 		F442489E2D5A0EA500A5034E /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F442489D2D5A0EA500A5034E /* LocationManager.swift */; };
+		F4A1C7BC2D5B250200321B44 /* GeofenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A1C7BB2D5B250200321B44 /* GeofenceManager.swift */; };
+		F4A1C7C02D5B2D8500321B44 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A1C7BF2D5B2D8500321B44 /* MapViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		F442489A2D5A032F00A5034E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F442489B2D5A0B4700A5034E /* GoogleMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMapView.swift; sourceTree = "<group>"; };
 		F442489D2D5A0EA500A5034E /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		F4A1C7BB2D5B250200321B44 /* GeofenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeofenceManager.swift; sourceTree = "<group>"; };
+		F4A1C7BF2D5B2D8500321B44 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,8 +87,10 @@
 				F442489A2D5A032F00A5034E /* Info.plist */,
 				F442488C2D5A012100A5034E /* GoogleMapGeofenceApp.swift */,
 				F442488E2D5A012100A5034E /* ContentView.swift */,
+				F4A1C7BF2D5B2D8500321B44 /* MapViewController.swift */,
 				F442489B2D5A0B4700A5034E /* GoogleMapView.swift */,
 				F442489D2D5A0EA500A5034E /* LocationManager.swift */,
+				F4A1C7BB2D5B250200321B44 /* GeofenceManager.swift */,
 				F44248902D5A012200A5034E /* Assets.xcassets */,
 				F44248922D5A012200A5034E /* Preview Content */,
 			);
@@ -214,9 +220,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				F442488F2D5A012100A5034E /* ContentView.swift in Sources */,
+				F4A1C7C02D5B2D8500321B44 /* MapViewController.swift in Sources */,
 				F442488D2D5A012100A5034E /* GoogleMapGeofenceApp.swift in Sources */,
 				F442489E2D5A0EA500A5034E /* LocationManager.swift in Sources */,
 				F442489C2D5A0B4700A5034E /* GoogleMapView.swift in Sources */,
+				F4A1C7BC2D5B250200321B44 /* GeofenceManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
