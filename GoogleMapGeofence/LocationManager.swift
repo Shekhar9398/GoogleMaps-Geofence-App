@@ -7,7 +7,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var locationManager = CLLocationManager()
     @Published var userLocation: CLLocationCoordinate2D?
     
-    // Closure to notify about location updates
+    ///Mark:- Closure(for Capture)to notify about location updates
     var onLocationUpdate: ((CLLocationCoordinate2D) -> Void)?
 
     override init() {
@@ -17,13 +17,11 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         locationManager.startUpdatingLocation()
     }
 
+    ///Mark:- Update location on UI
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             DispatchQueue.main.async {
-                self.userLocation = location.coordinate
-                print("[LocationManager.swift] MARK: User's Last Location is \(location.coordinate)")
-                
-                // Notify MapViewController about the new location
+                self.userLocation = location.coordinate                
                 self.onLocationUpdate?(location.coordinate)
             }
         }

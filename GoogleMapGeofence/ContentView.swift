@@ -1,7 +1,7 @@
 import SwiftUI
 import GoogleMaps
 
-// MARK: - ContentView.swift - Main UI
+/// MARK: - ContentView.swift - Main UI
 struct ContentView: View {
     @StateObject private var locationManager = LocationManager()
     @StateObject private var geofenceManager = GeofenceManager() // ✅ Keep as @StateObject
@@ -19,10 +19,10 @@ struct ContentView: View {
             VStack {
                 Spacer()
                 HStack {
-                    // ✅ Toggle Drawing Mode Button
+                    //Toggle Drawing Mode Button
                     Button(action: {
                         isDrawingEnabled.toggle()
-                        print("[ContentView.swift] Debug: Drawing mode set to \(isDrawingEnabled)")
+                        print("[ContentView.swift] Drawing mode set to \(isDrawingEnabled)")
                     }) {
                         Text(isDrawingEnabled ? "Stop Drawing" : "Start Drawing")
                             .padding()
@@ -32,9 +32,8 @@ struct ContentView: View {
                             .shadow(radius: 5)
                     }
                     
-                    // ✅ Clear Selected Geofence Button
                     Button(action: {
-                        if let geofenceNumber = geofenceManager.getSelectedGeofenceNumber() { // ✅ Call function correctly
+                        if let geofenceNumber = geofenceManager.getSelectedGeofenceNumber() {
                             selectedGeofenceNumber = geofenceNumber
                             showDeleteAlert = true
                         }
@@ -56,6 +55,7 @@ struct ContentView: View {
                 message: Text("Are you sure you want to delete Geofence \(selectedGeofenceNumber ?? 0)?"),
                 primaryButton: .destructive(Text("Delete")) {
                     geofenceManager.clearSelectedGeofence()
+                    print("[ContentView] Geofence \(selectedGeofenceNumber!) has been deleted")
                 },
                 secondaryButton: .cancel()
             )

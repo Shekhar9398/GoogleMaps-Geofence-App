@@ -1,6 +1,7 @@
 import UIKit
 import GoogleMaps
 
+///Mark:- MapViewController
 class MapViewController: UIViewController, GMSMapViewDelegate {
     var mapView: GMSMapView!
     var locationManager: LocationManager
@@ -22,15 +23,18 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let camera = GMSCameraPosition.camera(withLatitude: locationManager.userLocation?.latitude ?? 37.7749,
-                                              longitude: locationManager.userLocation?.longitude ?? -122.4194,
-                                              zoom: 15.0)
+        let camera = GMSCameraPosition.camera(
+            withLatitude: locationManager.userLocation?.latitude ?? 18.5204,
+            longitude: locationManager.userLocation?.longitude ?? 73.8567,
+            zoom: 15.0
+        )
+
         mapView = GMSMapView.map(withFrame: self.view.frame, camera: camera)
         mapView.delegate = self
         self.view.addSubview(mapView)
 
         updateUserLocationMarker()
-        geofenceManager.loadGeofences(on: mapView) // ✅ Restored missing function
+        geofenceManager.loadGeofences(on: mapView)
         addDrawingGesture()
         updateMapGestures()
     }
@@ -42,7 +46,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         mapView.settings.tiltGestures = !isDrawingEnabled
     }
 
-    // ✅ Restored: Function to update user location marker
+    //Function to update user location marker
     private func updateUserLocationMarker() {
         if let userLocation = locationManager.userLocation {
             let userMarker = GMSMarker(position: userLocation)
@@ -52,7 +56,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         }
     }
 
-    // ✅ Restored: Function to allow drawing gestures for geofences
+    //Function to allow drawing gestures for geofences
     private func addDrawingGesture() {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         panGesture.maximumNumberOfTouches = 1
@@ -83,7 +87,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
             geofenceManager.addCoordinate(coordinate)
             liveDrawingPath?.add(coordinate)
             liveDrawingPolyline?.path = liveDrawingPath
-            print("[MapViewController] Drawing geofence at \(coordinate)")
 
         case .ended:
             liveDrawingPolyline?.map = nil
@@ -93,14 +96,14 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
             geofenceManager.finishDrawing(on: mapView)
             updateUserLocationMarker() // Keep user's location marker visible
 
-            print("[MapViewController] Finished drawing geofence")
+            print("[MapViewController] Finished drawing geofence at \(coordinate)")
 
         default:
             break
         }
     }
 
-    // ✅ Restored: Detect when a user taps on a geofence to select it
+    //Detect when a user taps on a geofence to select it
     func mapView(_ mapView: GMSMapView, didTap overlay: GMSOverlay) {
         if let polygon = overlay as? GMSPolygon {
             geofenceManager.selectedGeofence = polygon

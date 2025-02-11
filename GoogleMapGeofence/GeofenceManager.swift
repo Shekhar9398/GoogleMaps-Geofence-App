@@ -1,6 +1,7 @@
 import GoogleMaps
 import CoreLocation
 
+///Mark:- GeofenceManager 
 class GeofenceManager: ObservableObject {
     @Published private var geofenceCoordinates: [[CLLocationCoordinate2D]] = []
     @Published private var geofencePolygons: [GMSPolygon] = []
@@ -8,14 +9,17 @@ class GeofenceManager: ObservableObject {
     private var geofenceNumbers: [GMSPolygon: Int] = [:] // ✅ Store geofence numbers
     @Published var selectedGeofence: GMSPolygon?
 
+    //adding coordinates to "[[CLLocationCoordinate2D]]" array
     func startDrawing() {
         geofenceCoordinates.append([])
     }
 
+    //append coordinate at last index of array
     func addCoordinate(_ coordinate: CLLocationCoordinate2D) {
         geofenceCoordinates[geofenceCoordinates.count - 1].append(coordinate)
     }
 
+    ///Mark:- only draw when coordinates(or touches) more than 2
     func finishDrawing(on mapView: GMSMapView) {
         guard let lastGeofence = geofenceCoordinates.last, lastGeofence.count > 2 else { return }
         
@@ -25,7 +29,7 @@ class GeofenceManager: ObservableObject {
         }
         
         let polygon = GMSPolygon(path: path)
-        polygon.fillColor = getRandomColor().withAlphaComponent(0.4) // ✅ Restored function
+        polygon.fillColor = getRandomColor().withAlphaComponent(0.4) //Restored function
         polygon.strokeColor = .black
         polygon.strokeWidth = 3
         polygon.map = mapView
@@ -44,7 +48,7 @@ class GeofenceManager: ObservableObject {
         }
     }
 
-    // ✅ Restored: Load existing geofences on the map
+    ///Mark:- Method to Load existing geofences(Polygon) on the map
     func loadGeofences(on mapView: GMSMapView) {
         for polygon in geofencePolygons {
             polygon.map = mapView
@@ -58,6 +62,7 @@ class GeofenceManager: ObservableObject {
         return nil
     }
 
+    ///Mark:- Method to clear the selected Geofence
     func clearSelectedGeofence() {
         if let selected = selectedGeofence, let index = geofencePolygons.firstIndex(of: selected) {
             selected.map = nil
@@ -74,7 +79,7 @@ class GeofenceManager: ObservableObject {
         }
     }
 
-    // ✅ Restored: Calculate geofence center for mint marker placement
+    ///Mark:- Calculate geofence center for mint marker placement
     private func calculateGeofenceCenter(coordinates: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D? {
         guard !coordinates.isEmpty else { return nil }
         let latSum = coordinates.map { $0.latitude }.reduce(0, +)
@@ -83,7 +88,7 @@ class GeofenceManager: ObservableObject {
                                       longitude: lngSum / Double(coordinates.count))
     }
 
-    // ✅ Restored: Generate a random color for geofence fill
+    ///Mark:- Generate a random color for geofence fill
     private func getRandomColor() -> UIColor {
         let colors: [UIColor] = [.blue, .green, .purple, .orange, .cyan, .magenta, .yellow, .red]
         return colors.randomElement() ?? .blue
