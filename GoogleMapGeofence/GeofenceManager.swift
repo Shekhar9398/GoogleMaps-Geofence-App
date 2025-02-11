@@ -1,7 +1,7 @@
 import GoogleMaps
 import CoreLocation
 
-///Mark:- GeofenceManager 
+///Mark:- GeofenceManager
 class GeofenceManager: ObservableObject {
     @Published private var geofenceCoordinates: [[CLLocationCoordinate2D]] = []
     @Published private var geofencePolygons: [GMSPolygon] = []
@@ -9,17 +9,19 @@ class GeofenceManager: ObservableObject {
     private var geofenceNumbers: [GMSPolygon: Int] = [:] // ✅ Store geofence numbers
     @Published var selectedGeofence: GMSPolygon?
 
-    //adding coordinates to "[[CLLocationCoordinate2D]]" array
+    @Published var isUserInsideGeofence: Bool = false  // ✅ Track if user is inside a geofence
+
+    //Adding coordinates to "[[CLLocationCoordinate2D]]" array
     func startDrawing() {
         geofenceCoordinates.append([])
     }
 
-    //append coordinate at last index of array
+    //Append coordinate at last index of array
     func addCoordinate(_ coordinate: CLLocationCoordinate2D) {
         geofenceCoordinates[geofenceCoordinates.count - 1].append(coordinate)
     }
 
-    ///Mark:- only draw when coordinates(or touches) more than 2
+    ///Mark:- Only draw when coordinates (or touches) are more than 2
     func finishDrawing(on mapView: GMSMapView) {
         guard let lastGeofence = geofenceCoordinates.last, lastGeofence.count > 2 else { return }
         
@@ -29,7 +31,7 @@ class GeofenceManager: ObservableObject {
         }
         
         let polygon = GMSPolygon(path: path)
-        polygon.fillColor = getRandomColor().withAlphaComponent(0.4) //Restored function
+        polygon.fillColor = getRandomColor().withAlphaComponent(0.4)
         polygon.strokeColor = .black
         polygon.strokeWidth = 3
         polygon.map = mapView
@@ -48,7 +50,7 @@ class GeofenceManager: ObservableObject {
         }
     }
 
-    ///Mark:- Method to Load existing geofences(Polygon) on the map
+    ///Mark:- Load existing geofences (Polygons) on the map
     func loadGeofences(on mapView: GMSMapView) {
         for polygon in geofencePolygons {
             polygon.map = mapView
@@ -62,7 +64,7 @@ class GeofenceManager: ObservableObject {
         return nil
     }
 
-    ///Mark:- Method to clear the selected Geofence
+    ///Mark:- Clear the selected Geofence
     func clearSelectedGeofence() {
         if let selected = selectedGeofence, let index = geofencePolygons.firstIndex(of: selected) {
             selected.map = nil
@@ -77,6 +79,23 @@ class GeofenceManager: ObservableObject {
             geofenceNumbers.removeValue(forKey: selected)
             selectedGeofence = nil
         }
+    }
+
+    ///Mark:- Check if the user is inside any geofence
+    func isUserInsideAnyGeofence(userLocation: CLLocationCoordinate2D) -> Bool {
+        for polygon in geofencePolygons {
+            if isPointInsidePolygon(point: userLocation, polygon: polygon) {
+                return true
+            }
+        }
+        return false
+    }
+
+    ///Mark:- Helper function to check if a point is inside a polygon
+    private func isPointInsidePolygon(point: CLLocationCoordinate2D, polygon: GMSPolygon) -> Bool {
+        guard let path = polygon.path else { return false }
+        let bounds = GMSCoordinateBounds(path: path)
+        return bounds.contains(point)
     }
 
     ///Mark:- Calculate geofence center for mint marker placement
