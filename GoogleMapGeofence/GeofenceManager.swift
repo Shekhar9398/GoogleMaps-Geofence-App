@@ -1,62 +1,73 @@
 import GoogleMaps
 import SwiftUI
 
-// MARK: - GeofenceManager.swift - Handles geofence logic
 class GeofenceManager: ObservableObject {
-    private var paths: [GMSMutablePath] = []
-    private var polygons: [GMSPolygon] = []
-    private let colors: [UIColor] = [.red, .blue, .green, .yellow, .purple]
+    private var geofenceCoordinates: [[CLLocationCoordinate2D]] = []
 
     func startDrawing() {
-        paths.append(GMSMutablePath())
-        print("[GeofenceManager.swift] MARK: New geofence started")
+        geofenceCoordinates.append([])
     }
 
     func addCoordinate(_ coordinate: CLLocationCoordinate2D) {
-        paths.last?.add(coordinate)
-        print("[GeofenceManager.swift] MARK: Added coordinate \(coordinate), total points: \(paths.last?.count() ?? 0)")
+        geofenceCoordinates[geofenceCoordinates.count - 1].append(coordinate)
     }
 
     func finishDrawing(on mapView: GMSMapView) {
-        guard let path = paths.last, path.count() > 2 else {
-            print("[GeofenceManager.swift] MARK: Not enough points to create a geofence")
-            return
+        guard let lastGeofence = geofenceCoordinates.last, lastGeofence.count > 2 else { return }
+        
+        let path = GMSMutablePath()
+        for coordinate in lastGeofence {
+            path.add(coordinate)
         }
-
+        
         let polygon = GMSPolygon(path: path)
-        polygon.fillColor = colors[polygons.count % colors.count].withAlphaComponent(0.3)
-        polygon.strokeColor = .black
-        polygon.strokeWidth = 2
+        polygon.fillColor = getRandomColor().withAlphaComponent(0.4) // ✅ Colorful inside fill
+        polygon.strokeColor = .black // ✅ Black border
+        polygon.strokeWidth = 3
         polygon.map = mapView
-        polygons.append(polygon)
 
-        // Add a marker at the first coordinate for reference
-        let firstCoordinate = path.coordinate(at: 0)
-        let marker = GMSMarker(position: firstCoordinate)
-        marker.title = "Geofence"
-        marker.map = mapView
-
-        print("[GeofenceManager.swift] MARK: Geofence created with \(path.count()) points")
+        // ✅ Add a mint-colored marker at the geofence center
+        if let centerCoordinate = calculateGeofenceCenter(coordinates: lastGeofence) {
+            let geofenceMarker = GMSMarker(position: centerCoordinate)
+            geofenceMarker.title = "Geofence \(geofenceCoordinates.count)"
+            geofenceMarker.icon = GMSMarker.markerImage(with: .systemMint)
+            geofenceMarker.map = mapView
+        }
     }
 
-    func clearGeofences() {
-        for polygon in polygons {
-            polygon.map = nil
-        }
-        polygons.removeAll()
-        paths.removeAll()
-        print("[GeofenceManager.swift] MARK: Cleared all geofences")
+    func getCurrentGeofenceCoordinates() -> [CLLocationCoordinate2D]? {
+        return geofenceCoordinates.last
     }
 
     func loadGeofences(on mapView: GMSMapView) {
-        for (index, path) in paths.enumerated() {
+        for geofence in geofenceCoordinates {
+            let path = GMSMutablePath()
+            for coordinate in geofence {
+                path.add(coordinate)
+            }
+            
             let polygon = GMSPolygon(path: path)
-            polygon.fillColor = colors[index % colors.count].withAlphaComponent(0.3)
-            polygon.strokeColor = .black
-            polygon.strokeWidth = 2
+            polygon.fillColor = getRandomColor().withAlphaComponent(0.4) // ✅ Colorful inside
+            polygon.strokeColor = .black // ✅ Black border
+            polygon.strokeWidth = 3
             polygon.map = mapView
-            polygons.append(polygon)
-            print("[GeofenceManager.swift] MARK: Loaded geofence \(index)")
         }
+    }
+
+    // ✅ Helper function to calculate the center of the geofence
+    private func calculateGeofenceCenter(coordinates: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D? {
+        guard !coordinates.isEmpty else { return nil }
+        
+        let latSum = coordinates.map { $0.latitude }.reduce(0, +)
+        let lngSum = coordinates.map { $0.longitude }.reduce(0, +)
+        
+        return CLLocationCoordinate2D(latitude: latSum / Double(coordinates.count),
+                                      longitude: lngSum / Double(coordinates.count))
+    }
+
+    // ✅ Random color generator for colorful inside fill
+    private func getRandomColor() -> UIColor {
+        let colors: [UIColor] = [.blue, .green, .purple, .orange, .cyan, .magenta, .yellow, .red]
+        return colors.randomElement() ?? .blue
     }
 }

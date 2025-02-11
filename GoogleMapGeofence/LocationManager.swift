@@ -6,6 +6,9 @@ import CoreLocation
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var locationManager = CLLocationManager()
     @Published var userLocation: CLLocationCoordinate2D?
+    
+    // Closure to notify about location updates
+    var onLocationUpdate: ((CLLocationCoordinate2D) -> Void)?
 
     override init() {
         super.init()
@@ -19,6 +22,9 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             DispatchQueue.main.async {
                 self.userLocation = location.coordinate
                 print("[LocationManager.swift] MARK: User's Last Location is \(location.coordinate)")
+                
+                // Notify MapViewController about the new location
+                self.onLocationUpdate?(location.coordinate)
             }
         }
     }
