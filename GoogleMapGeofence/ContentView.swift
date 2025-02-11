@@ -1,5 +1,6 @@
 import SwiftUI
 
+// MARK: - ContentView.swift - Main UI
 struct ContentView: View {
     @StateObject private var locationManager = LocationManager()
     @StateObject private var geofenceManager = GeofenceManager()
@@ -30,3 +31,4 @@ struct ContentView: View {
         }
     }
 }
+

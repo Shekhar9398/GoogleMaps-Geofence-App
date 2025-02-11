@@ -1,6 +1,8 @@
 import SwiftUI
 import GoogleMaps
 
+// MARK: - GoogleMapView.swift - SwiftUI Integration
+@available(iOS 15.0, *)
 struct GoogleMapView: UIViewControllerRepresentable {
     @ObservedObject var locationManager: LocationManager
     @ObservedObject var geofenceManager: GeofenceManager

@@ -3,6 +3,7 @@ import SwiftUI
 import GoogleMaps
 import GooglePlaces
 
+@available(iOS 15.0, *)
 @main
 struct GoogleMapGeofenceApp: App {
     ///Mark:- Add API Key here
