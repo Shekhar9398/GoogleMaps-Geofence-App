@@ -1,8 +1,12 @@
 import GoogleMaps
-import SwiftUI
+import CoreLocation
 
 class GeofenceManager: ObservableObject {
-    private var geofenceCoordinates: [[CLLocationCoordinate2D]] = []
+    @Published private var geofenceCoordinates: [[CLLocationCoordinate2D]] = []
+    @Published private var geofencePolygons: [GMSPolygon] = []
+    @Published private var geofenceMarkers: [GMSMarker] = []
+    private var geofenceNumbers: [GMSPolygon: Int] = [:] // ✅ Store geofence numbers
+    @Published var selectedGeofence: GMSPolygon?
 
     func startDrawing() {
         geofenceCoordinates.append([])
@@ -21,51 +25,65 @@ class GeofenceManager: ObservableObject {
         }
         
         let polygon = GMSPolygon(path: path)
-        polygon.fillColor = getRandomColor().withAlphaComponent(0.4) // ✅ Colorful inside fill
-        polygon.strokeColor = .black // ✅ Black border
+        polygon.fillColor = getRandomColor().withAlphaComponent(0.4) // ✅ Restored function
+        polygon.strokeColor = .black
         polygon.strokeWidth = 3
         polygon.map = mapView
+        polygon.isTappable = true
+        geofencePolygons.append(polygon)
 
-        // ✅ Add a mint-colored marker at the geofence center
+        let geofenceNumber = geofencePolygons.count
+        geofenceNumbers[polygon] = geofenceNumber
+
         if let centerCoordinate = calculateGeofenceCenter(coordinates: lastGeofence) {
             let geofenceMarker = GMSMarker(position: centerCoordinate)
-            geofenceMarker.title = "Geofence \(geofenceCoordinates.count)"
+            geofenceMarker.title = "Geofence \(geofenceNumber)"
             geofenceMarker.icon = GMSMarker.markerImage(with: .systemMint)
             geofenceMarker.map = mapView
+            geofenceMarkers.append(geofenceMarker)
         }
     }
 
-    func getCurrentGeofenceCoordinates() -> [CLLocationCoordinate2D]? {
-        return geofenceCoordinates.last
-    }
-
+    // ✅ Restored: Load existing geofences on the map
     func loadGeofences(on mapView: GMSMapView) {
-        for geofence in geofenceCoordinates {
-            let path = GMSMutablePath()
-            for coordinate in geofence {
-                path.add(coordinate)
-            }
-            
-            let polygon = GMSPolygon(path: path)
-            polygon.fillColor = getRandomColor().withAlphaComponent(0.4) // ✅ Colorful inside
-            polygon.strokeColor = .black // ✅ Black border
-            polygon.strokeWidth = 3
+        for polygon in geofencePolygons {
             polygon.map = mapView
         }
     }
 
-    // ✅ Helper function to calculate the center of the geofence
+    func getSelectedGeofenceNumber() -> Int? {
+        if let selected = selectedGeofence {
+            return geofenceNumbers[selected]
+        }
+        return nil
+    }
+
+    func clearSelectedGeofence() {
+        if let selected = selectedGeofence, let index = geofencePolygons.firstIndex(of: selected) {
+            selected.map = nil
+            geofencePolygons.remove(at: index)
+
+            if index < geofenceMarkers.count {
+                geofenceMarkers[index].map = nil
+                geofenceMarkers.remove(at: index)
+            }
+
+            geofenceCoordinates.remove(at: index)
+            geofenceNumbers.removeValue(forKey: selected)
+            selectedGeofence = nil
+        }
+    }
+
+    // ✅ Restored: Calculate geofence center for mint marker placement
     private func calculateGeofenceCenter(coordinates: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D? {
         guard !coordinates.isEmpty else { return nil }
-        
         let latSum = coordinates.map { $0.latitude }.reduce(0, +)
         let lngSum = coordinates.map { $0.longitude }.reduce(0, +)
-        
         return CLLocationCoordinate2D(latitude: latSum / Double(coordinates.count),
                                       longitude: lngSum / Double(coordinates.count))
     }
 
-    // ✅ Random color generator for colorful inside fill
+    // ✅ Restored: Generate a random color for geofence fill
     private func getRandomColor() -> UIColor {
         let colors: [UIColor] = [.blue, .green, .purple, .orange, .cyan, .magenta, .yellow, .red]
         return colors.randomElement() ?? .blue
