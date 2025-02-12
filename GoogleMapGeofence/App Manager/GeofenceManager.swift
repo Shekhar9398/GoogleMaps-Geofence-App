@@ -1,14 +1,15 @@
 import GoogleMaps
 import CoreLocation
 
-///Mark:- GeofenceManager
+///Mark:- GeofenceManager to manage and convert coordinates to geofence
 class GeofenceManager: ObservableObject {
     @Published private var geofenceCoordinates: [[CLLocationCoordinate2D]] = []
     @Published private var geofencePolygons: [GMSPolygon] = []
     @Published private var geofenceMarkers: [GMSMarker] = []
+    
     private var geofenceNumbers: [GMSPolygon: Int] = [:] //Store geofence numbers
+    
     @Published var selectedGeofence: GMSPolygon?
-
     @Published var isUserInsideGeofence: Bool = false  //Track if user is inside a geofence
 
     //Adding coordinates to "[[CLLocationCoordinate2D]]" array
