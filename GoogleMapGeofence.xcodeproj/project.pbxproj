@@ -84,13 +84,12 @@
 		F442488B2D5A012100A5034E /* GoogleMapGeofence */ = {
 			isa = PBXGroup;
 			children = (
-				F442489A2D5A032F00A5034E /* Info.plist */,
 				F442488C2D5A012100A5034E /* GoogleMapGeofenceApp.swift */,
-				F442488E2D5A012100A5034E /* ContentView.swift */,
-				F4A1C7BF2D5B2D8500321B44 /* MapViewController.swift */,
-				F442489B2D5A0B4700A5034E /* GoogleMapView.swift */,
-				F442489D2D5A0EA500A5034E /* LocationManager.swift */,
-				F4A1C7BB2D5B250200321B44 /* GeofenceManager.swift */,
+				F4B2EFE42D5C795A00ADC4E8 /* View */,
+				F4B2EFE52D5C796800ADC4E8 /* ViewController */,
+				F4B2EFE72D5C79A200ADC4E8 /* App Manager */,
+				F4B2EFE62D5C797A00ADC4E8 /* Utils */,
+				F442489A2D5A032F00A5034E /* Info.plist */,
 				F44248902D5A012200A5034E /* Assets.xcassets */,
 				F44248922D5A012200A5034E /* Preview Content */,
 			);
@@ -103,6 +102,39 @@
 				F44248932D5A012200A5034E /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		F4B2EFE42D5C795A00ADC4E8 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				F442489B2D5A0B4700A5034E /* GoogleMapView.swift */,
+				F442488E2D5A012100A5034E /* ContentView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		F4B2EFE52D5C796800ADC4E8 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				F4A1C7BF2D5B2D8500321B44 /* MapViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		F4B2EFE62D5C797A00ADC4E8 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		F4B2EFE72D5C79A200ADC4E8 /* App Manager */ = {
+			isa = PBXGroup;
+			children = (
+				F442489D2D5A0EA500A5034E /* LocationManager.swift */,
+				F4A1C7BB2D5B250200321B44 /* GeofenceManager.swift */,
+			);
+			path = "App Manager";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
