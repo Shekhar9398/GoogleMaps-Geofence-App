@@ -16,6 +16,7 @@
 		F442489E2D5A0EA500A5034E /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F442489D2D5A0EA500A5034E /* LocationManager.swift */; };
 		F4A1C7BC2D5B250200321B44 /* GeofenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A1C7BB2D5B250200321B44 /* GeofenceManager.swift */; };
 		F4A1C7C02D5B2D8500321B44 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A1C7BF2D5B2D8500321B44 /* MapViewController.swift */; };
+		F4C96DD42D5C7E1D006DF9E7 /* getRandomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C96DD32D5C7E1D006DF9E7 /* getRandomColor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		F442489D2D5A0EA500A5034E /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		F4A1C7BB2D5B250200321B44 /* GeofenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeofenceManager.swift; sourceTree = "<group>"; };
 		F4A1C7BF2D5B2D8500321B44 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		F4C96DD32D5C7E1D006DF9E7 /* getRandomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = getRandomColor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +126,7 @@
 		F4B2EFE62D5C797A00ADC4E8 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				F4C96DD32D5C7E1D006DF9E7 /* getRandomColor.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -252,6 +255,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F442488F2D5A012100A5034E /* ContentView.swift in Sources */,
+				F4C96DD42D5C7E1D006DF9E7 /* getRandomColor.swift in Sources */,
 				F4A1C7C02D5B2D8500321B44 /* MapViewController.swift in Sources */,
 				F442488D2D5A012100A5034E /* GoogleMapGeofenceApp.swift in Sources */,
 				F442489E2D5A0EA500A5034E /* LocationManager.swift in Sources */,
