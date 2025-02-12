@@ -36,9 +36,24 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
 
         updateUserLocationMarker()
         geofenceManager.loadGeofences(on: mapView)
-        addDrawingGesture()
         updateMapGestures()
+
+        ///Mark:- Listen for location updates and check geofence entry
+        locationManager.onLocationUpdate = { [weak self] newLocation in
+            guard let self = self else { return }
+            self.updateUserLocationMarker()
+
+            let isInside = self.geofenceManager.isUserInsideAnyGeofence(userLocation: newLocation)
+
+            if isInside && !self.geofenceManager.isUserInsideGeofence {
+                self.geofenceManager.isUserInsideGeofence = true
+                self.showGeofencePopup()
+            } else if !isInside {
+                self.geofenceManager.isUserInsideGeofence = false
+            }
+        }
     }
+
 
     func updateMapGestures() {
         mapView.settings.scrollGestures = !isDrawingEnabled
@@ -129,4 +144,14 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
             self.updateUserLocationMarker()
         }
     }
+    
+    ///Mark:- trigger popUp when user enters in geofence
+    private func showGeofencePopup() {
+        let alert = UIAlertController(title: "Geofence Alert",
+                                      message: "You have entered a geofenced area.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+
 }

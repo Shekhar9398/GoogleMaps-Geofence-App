@@ -6,8 +6,8 @@ import CoreLocation
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var locationManager = CLLocationManager()
     @Published var userLocation: CLLocationCoordinate2D?
-    
-    ///Mark:- Closure(for Capture)to notify about location updates
+
+    ///Closure to notify about location updates
     var onLocationUpdate: ((CLLocationCoordinate2D) -> Void)?
 
     override init() {
@@ -17,13 +17,13 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         locationManager.startUpdatingLocation()
     }
 
-    ///Mark:- Update location on UI
+    ///Mark:- method to update user location
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.last {
-            DispatchQueue.main.async {
-                self.userLocation = location.coordinate                
-                self.onLocationUpdate?(location.coordinate)
-            }
+        guard let location = locations.last else { return }
+        
+        DispatchQueue.main.async {
+            self.userLocation = location.coordinate
+            self.onLocationUpdate?(location.coordinate)
         }
     }
 }
